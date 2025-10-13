@@ -38,11 +38,13 @@ serve(async (req) => {
             content: `You are an expert code translator. Your task is to accurately translate code from one programming language to another while:
 1. Preserving the logic and functionality
 2. Following the target language's best practices and idioms
-3. Maintaining code structure when possible
+3. Maintaining proper code structure with correct indentation
 4. Adding brief comments only when necessary to explain language-specific differences
 5. Ensuring the translated code is syntactically correct and functional
+6. Using consistent formatting with proper spacing and line breaks
+7. Organizing code in a clean, readable structure
 
-Only return the translated code without any explanations or markdown formatting.`
+Only return the translated code without any explanations or markdown formatting. The code must be properly indented and well-structured.`
           },
           {
             role: "user",
