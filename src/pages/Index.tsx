@@ -8,6 +8,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { Code2, ArrowRight, Copy, Loader2 } from "lucide-react";
 
 const LANGUAGES = [
+  "Natural Language", "Pseudocode",
   "JavaScript", "TypeScript", "Python", "Java", "C", "C++", "C#", "Ruby", "Go",
   "Rust", "Swift", "Kotlin", "PHP", "Pascal", "SQL", "HTML", "CSS", "Lua"
 ].sort();

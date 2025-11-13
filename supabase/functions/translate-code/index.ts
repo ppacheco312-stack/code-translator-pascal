@@ -24,6 +24,34 @@ serve(async (req) => {
 
     console.log(`Translating from ${sourceLanguage} to ${targetLanguage}`);
 
+    const isNaturalLanguageSource = sourceLanguage === "Natural Language" || sourceLanguage === "Pseudocode";
+    
+    const systemPrompt = isNaturalLanguageSource
+      ? `You are an expert programmer. Your task is to convert natural language descriptions or pseudocode into working ${targetLanguage} code while:
+1. Understanding the intent and logic from the description
+2. Following ${targetLanguage}'s best practices and idioms
+3. Writing clean, well-structured code with proper indentation
+4. Adding brief comments only when necessary to explain complex logic
+5. Ensuring the code is syntactically correct and functional
+6. Using consistent formatting with proper spacing and line breaks
+7. Making reasonable assumptions for unspecified details
+
+Only return the working code without any explanations or markdown formatting. The code must be properly indented and well-structured.`
+      : `You are an expert code translator. Your task is to accurately translate code from one programming language to another while:
+1. Preserving the logic and functionality
+2. Following the target language's best practices and idioms
+3. Maintaining proper code structure with correct indentation
+4. Adding brief comments only when necessary to explain language-specific differences
+5. Ensuring the translated code is syntactically correct and functional
+6. Using consistent formatting with proper spacing and line breaks
+7. Organizing code in a clean, readable structure
+
+Only return the translated code without any explanations or markdown formatting. The code must be properly indented and well-structured.`;
+
+    const userPrompt = isNaturalLanguageSource
+      ? `Convert the following ${sourceLanguage} into ${targetLanguage} code:\n\n${sourceCode}`
+      : `Translate the following ${sourceLanguage} code to ${targetLanguage}:\n\n${sourceCode}`;
+
     const response = await fetch("https://ai.gateway.lovable.dev/v1/chat/completions", {
       method: "POST",
       headers: {
@@ -35,20 +63,11 @@ serve(async (req) => {
         messages: [
           {
             role: "system",
-            content: `You are an expert code translator. Your task is to accurately translate code from one programming language to another while:
-1. Preserving the logic and functionality
-2. Following the target language's best practices and idioms
-3. Maintaining proper code structure with correct indentation
-4. Adding brief comments only when necessary to explain language-specific differences
-5. Ensuring the translated code is syntactically correct and functional
-6. Using consistent formatting with proper spacing and line breaks
-7. Organizing code in a clean, readable structure
-
-Only return the translated code without any explanations or markdown formatting. The code must be properly indented and well-structured.`
+            content: systemPrompt
           },
           {
             role: "user",
-            content: `Translate the following ${sourceLanguage} code to ${targetLanguage}:\n\n${sourceCode}`
+            content: userPrompt
           }
         ],
         temperature: 0.3,
